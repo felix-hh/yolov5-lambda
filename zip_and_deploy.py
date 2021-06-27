@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil
 import zipfile
 
-assets_path = Path('lambda-yolov5-felixh')
+assets_path = Path('yolov5-lambda')
 dirs_to_remove = [assets_path / '__pycache__',
                     assets_path / 'runs']
 
