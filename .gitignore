@@ -1,4 +1,7 @@
 */__pycache__/*
+yolov5-lambda/models/__pycache__/
+yolov5-lambda/utils/__pycache__/
+yolov5-lambda/__pycache__/
 yolov5-lambda/runs
 yolov5-lambda/env
 yolov5-lambda.zip
