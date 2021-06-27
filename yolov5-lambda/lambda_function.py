@@ -14,9 +14,6 @@ WEIGHTS_TO_PATHS = {"yolov5s" : 'weights/yolov5s.pt',
 # main function executed by lambda. it is passed a json event with keys and a context, that is unused. 
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
-    print("value1 = " + event['key1'])
-    print("value2 = " + event['key2'])
-    print("value3 = " + event['key3'])
     print('context')
     print(context)
 
@@ -32,8 +29,5 @@ if __name__ == '__main__':
     print('we are in main')
     lambda_handler(json.loads(f"""{{"source": "{DEFAULT_SOURCE}", 
                                 "weights": "{DEFAULT_WEIGHTS}", 
-                                "is_path": "True",
-                                "key1" : "coco",
-                                "key2" : "is",
-                                "key3" : "great"}}"""), None)
+                                "is_path": "True"}}"""), None)
     print('finishing main')
