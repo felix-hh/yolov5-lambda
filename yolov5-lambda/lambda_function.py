@@ -1,6 +1,7 @@
+import sys
+sys.path.append('env')
 import json
 from detect import detect
-
 # run requried imports, set up everything. 
 print('Loading lambda function') 
 

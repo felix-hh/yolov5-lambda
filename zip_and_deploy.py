@@ -3,7 +3,8 @@ import shutil
 import zipfile
 
 assets_path = Path('yolov5-lambda')
-dirs_to_remove = [assets_path / '__pycache__',
+dirs_to_remove = [assets_path / '__pycache__', assets_path / 'utils' / '__pycache__',
+                    assets_path / 'models' / '__pycache__', 
                     assets_path / 'runs']
 
 def remove_dirs(dirs_to_remove): 

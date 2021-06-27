@@ -1,3 +1,6 @@
+import sys
+sys.path.append('env')
+
 import argparse
 import time
 from pathlib import Path
@@ -32,7 +35,7 @@ def base64_to_numpy(img, shape):
 
 
 def detect(save=True, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= DEFAULT_IMAGE_SIZE,
-            conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= False, shape= (640, 480)):
+            conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= True, shape= (640, 480)):
     """
     Shape is HxW as typical in numpy images. 
     """
