@@ -142,9 +142,10 @@ def detect(save=True, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= D
     print('Done. (%.3fs)' % (time.time() - t0))
 
     im0 = np.uint8(im0*255)
+    import sys
     # Prepare for json response. Note that prediction contains only one element since one image is processed at a time. 
     result = {'predictions': pred[0].tolist(),
-              'image': im0.tolist()}
+              'image': base64.b64encode(im0).decode('utf-8')}
 
     return json.dumps(result)
 

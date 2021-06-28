@@ -1,4 +1,5 @@
 import json
+import sys
 from detect import detect
 # run requried imports, set up everything. 
 print('Loading lambda function') 
@@ -27,7 +28,8 @@ def lambda_handler(event, context):
     )
 
     pred = detect(**params)
-
+    payload_size = sys.getsizeof(pred)
+    print(f"Size of response payload: {payload_size}")
     return pred  # Echo back the first key value
     #raise Exception('Something went wrong')
 
