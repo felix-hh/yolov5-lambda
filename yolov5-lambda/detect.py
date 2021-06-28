@@ -3,6 +3,7 @@ import argparse
 import time
 from pathlib import Path
 import base64
+from PIL import Image
 
 import cv2
 import torch
@@ -140,6 +141,7 @@ def detect(save=True, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= D
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
+    im0 = np.uint8(im0*255)
     # Prepare for json response. Note that prediction contains only one element since one image is processed at a time. 
     result = {'predictions': pred[0].tolist(),
               'image': im0.tolist()}
