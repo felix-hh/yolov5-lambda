@@ -1,6 +1,4 @@
-import sys
-sys.path.append('env')
-
+import json
 import argparse
 import time
 from pathlib import Path
@@ -142,7 +140,11 @@ def detect(save=True, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= D
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
-    return pred
+    # Prepare for json response. Note that prediction contains only one element since one image is processed at a time. 
+    result = {'predictions': pred[0].tolist(),
+              'image': im0.tolist()}
+
+    return json.dumps(result)
 
 
 if __name__ == '__main__':
