@@ -16,9 +16,8 @@ SAVE_TRUE_FLAG = "TRUE"
 
 # main function executed by lambda. it is passed a json event with keys and a context, that is unused. 
 def lambda_handler(event, context):
-    print('context')
-    print(context)
-    print(help(context))
+    remaining_time = context.get_remaining_time_in_millis()
+    context.log(f"remaining time in milliseconds: {remaining_time}")
 
     print("calling detection")
     # obtain function parameters
@@ -33,20 +32,46 @@ def lambda_handler(event, context):
         weights= WEIGHTS_TO_PATHS[event['Weights']], 
         save= event['Save'].upper() == SAVE_TRUE_FLAG,
         imgsz= int(event['InferenceImageSize']),
-        conf_thres= int(event['ConfidenceThreshold']),
-        iou_thres= int(event['IouThreshold'])
+        conf_thres= float(event['ConfidenceThreshold']),
+        iou_thres= float(event['IouThreshold'])
     )
 
     pred = detect(**params)
     payload_size = sys.getsizeof(pred)
-    print(f"Size of response payload: {payload_size}")
+    context.log(f"Size of response payload: {payload_size}")
+
+    remaining_time = context.get_remaining_time_in_millis()
+    context.log(f"remaining time in milliseconds: {remaining_time}")
+
     return pred  # Echo back the first key value
     #raise Exception('Something went wrong')
+
+# sample context for testing
+class Context():
+    def __init__(self):
+        return
+    def log(self, message):
+        print(message)
+        return
+    def get_remaining_time_in_millis(self):
+        return -1
+
 
 # doesn't run in lambda, just useful for debugging. 
 if __name__ == '__main__':
     print('we are in main')
-    lambda_handler(json.loads(f"""{{"source": "{DEFAULT_SOURCE}", 
-                                "weights": "{DEFAULT_WEIGHTS}", 
-                                "is_path": "True"}}"""), None)
+
+    context = Context()
+    sample_request = """{
+            "Source": "./data/images/zidane.jpg",
+            "Width": 1080,
+            "Height": 810,
+            "IsPath": "True",
+            "Weights": "yolov5s",
+            "Save": "False",
+            "InferenceImageSize": 640,
+            "ConfidenceThreshold": 0.25,
+            "IouThreshold": 0.45
+            }"""
+    lambda_handler(json.loads(sample_request), context)
     print('finishing main')

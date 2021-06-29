@@ -19,8 +19,8 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, time_synchronized
 
 IMAGE_SIZES = (320, 640)
-DEFAULT_SOURCE = 'data/images/assistant-surgeon-holds-surgical-instruments-medical-tray-78997883.jpg'
-DEFAULT_WEIGHTS = 'weights/granular.pt'
+DEFAULT_SOURCE = r"C:\Users\felix\Desktop\yolov5_on_lambda\yolov5-lambda\data\images\bus.jpg"
+DEFAULT_WEIGHTS = 'weights/yolov5s.pt'
 DEFAULT_IMAGE_SIZE = IMAGE_SIZES[-1]
 DEFAULT_DEVICE = ''
 DEFAULT_CONF_THRES = 0.25
@@ -45,7 +45,6 @@ def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WE
     if is_path:
         source = Path(source)
         source = cv2.imread(str(source))
-        shape = source.shape
     else:
         source = base64_to_numpy(source, shape)
     
@@ -144,7 +143,6 @@ def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WE
     print('Done. (%.3fs)' % (time.time() - t0))
 
     im0 = np.uint8(im0*255)
-    import sys
     # Prepare for json response. Note that prediction contains only one element since one image is processed at a time. 
     result = {'predictions': pred[0].tolist(),
               'image': base64.b64encode(im0).decode('utf-8')}
