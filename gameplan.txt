@@ -22,6 +22,9 @@ on ec2 instance with linux2 (as in lambda service) install rqs in ./packages
 add location of the packages to sys.path
 do a trial run, ensure lambda function works. 
 
+Update lambda function to return PIL.Image compressed .jpg image encoded in base64
+rather than the full numpy uint8 array. 
+
 TODO: additional script or update current script
 commit changes to github and s3
 

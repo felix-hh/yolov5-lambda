@@ -1,0 +1,1 @@
+docker run -p 9800:8080 yolov5-lambda
