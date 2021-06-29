@@ -12,19 +12,29 @@ WEIGHTS_TO_PATHS = {"yolov5s" : 'weights/yolov5s.pt',
                     "uniform" : 'weights/uniform.pt'}
 
 IS_PATH_TRUE_FLAG = "TRUE"
+SAVE_TRUE_FLAG = "TRUE"
 
 # main function executed by lambda. it is passed a json event with keys and a context, that is unused. 
 def lambda_handler(event, context):
     print('context')
     print(context)
+    print(help(context))
 
     print("calling detection")
     # obtain function parameters
     
+    width= int(event['Width'])
+    height= int(event['Height'])
+    
     params = dict(
-        source= event['source'],
-        is_path= event['is_path'].upper() == IS_PATH_TRUE_FLAG,
-        weights= WEIGHTS_TO_PATHS[event['weights']]
+        source= event['Source'],
+        shape= (height, width),
+        is_path= event['IsPath'].upper() == IS_PATH_TRUE_FLAG,
+        weights= WEIGHTS_TO_PATHS[event['Weights']], 
+        save= event['Save'].upper() == SAVE_TRUE_FLAG,
+        imgsz= int(event['InferenceImageSize']),
+        conf_thres= int(event['ConfidenceThreshold']),
+        iou_thres= int(event['IouThreshold'])
     )
 
     pred = detect(**params)

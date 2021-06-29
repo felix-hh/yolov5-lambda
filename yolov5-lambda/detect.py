@@ -25,6 +25,8 @@ DEFAULT_IMAGE_SIZE = IMAGE_SIZES[-1]
 DEFAULT_DEVICE = ''
 DEFAULT_CONF_THRES = 0.25
 DEFAULT_IOU_THRES = 0.45
+DEFAULT_SAVE_CONFIG = False
+DEFAULT_SAVE_ROOT = Path("/tmp/")
 
 def base64_to_numpy(img, shape):
     img = base64.decodebytes(img)
@@ -33,7 +35,7 @@ def base64_to_numpy(img, shape):
     return img
 
 
-def detect(save=True, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= DEFAULT_IMAGE_SIZE,
+def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= DEFAULT_IMAGE_SIZE,
             conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= True, shape= (640, 480)):
     """
     Shape is HxW as typical in numpy images. 
@@ -48,7 +50,7 @@ def detect(save=True, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= D
         source = base64_to_numpy(source, shape)
     
     # Directories
-    save_dir = Path(increment_path(Path('runs/detection') / 'exp', exist_ok=True))  # increment run
+    save_dir = Path(increment_path(DEFAULT_SAVE_ROOT / 'runs/detection' / 'exp', exist_ok=True))  # increment run
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Initialize
