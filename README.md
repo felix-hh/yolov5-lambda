@@ -14,3 +14,5 @@ To prepare the runtime environment for lambda, you will need to install all the 
 Launch a ec2 t2.micro instance in aws. Ensure that the Python version >= 3.8 and then run
 `<python3 -m pip install -r requirements.txt --target ./packages>`
 finally, run the zip_and_deploy.py script, and recover the zip file to upload it to AWS S3. 
+
+Scripts for building and deploying the container are in the yolov5-lambda folder. 
