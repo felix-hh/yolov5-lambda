@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 import base64
 from PIL import Image
+from io import BytesIO
 
 import cv2
 import torch
@@ -28,15 +29,22 @@ DEFAULT_IOU_THRES = 0.45
 DEFAULT_SAVE_CONFIG = False
 DEFAULT_SAVE_ROOT = Path("/tmp/")
 
-def base64_to_numpy(img, shape):
-    img = base64.decodebytes(img)
-    img = np.frombuffer(img, dtype=np.uint8)
-    img = img.reshape(shape)
+def base64_to_numpy(image_b64):
+    img = BytesIO(base64.b64decode(image_b64))
+    img = Image.open(img)
+    img = np.array(img, dtype= np.uint8)
     return img
+
+def numpy_to_b64(img): 
+    img = Image.fromarray(img)
+    b64 = BytesIO()
+    img.save(b64, 'jpeg')
+    b64 = base64.b64encode(b64.getvalue()).decode('utf-8')
+    return b64
 
 
 def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= DEFAULT_IMAGE_SIZE,
-            conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= True, shape= (640, 480)):
+            conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= True):
     """
     Shape is HxW as typical in numpy images. 
     """
@@ -44,9 +52,10 @@ def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WE
 
     if is_path:
         source = Path(source)
-        source = cv2.imread(str(source))
+        #save a copy because you're reversing the order of the color channels, and cv2 can't work with that without a new array
+        source = cv2.imread(str(source))[:,:,::-1].copy()
     else:
-        source = base64_to_numpy(source, shape)
+        source = base64_to_numpy(source)
     
     # Directories
     save_dir = Path(increment_path(DEFAULT_SAVE_ROOT / 'runs/detection' / 'exp', exist_ok=True))  # increment run
@@ -142,10 +151,12 @@ def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WE
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
-    im0 = np.uint8(im0*255)
+    # recover original color
+    response_img = numpy_to_b64(im0)
+    
     # Prepare for json response. Note that prediction contains only one element since one image is processed at a time. 
     result = {'predictions': pred[0].tolist(),
-              'image': base64.b64encode(im0).decode('utf-8')}
+              'image': response_img}
 
     return json.dumps(result)
 
