@@ -32,7 +32,7 @@ DEFAULT_SAVE_ROOT = Path("/tmp/")
 def base64_to_numpy(image_b64):
     img = BytesIO(base64.b64decode(image_b64))
     img = Image.open(img)
-    img = np.array(img, dtype= np.uint8)
+    img = np.asarray(img) #todo ensure that images are always converted to np.uint8
     return img
 
 def numpy_to_b64(img): 

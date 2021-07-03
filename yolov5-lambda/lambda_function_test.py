@@ -10,13 +10,13 @@ class Context():
     def __init__(self):
         return
     def log(self, message):
-        print(message)
+        print(str(message)[:100])
         return
     def get_remaining_time_in_millis(self):
         return -1
 
 
-INPUT_B64_BUS = Path("./data/base64_test/bus.json")
+INPUT_B64_BUS = Path("./data/base64_test/bus_b64.json")
 
 sample_request = json.loads("""{
         "Source": "./data/images/zidane.jpg",
@@ -54,3 +54,9 @@ if __name__ == '__main__':
     image2 = get_image_from_response(pred2)
     image1.save(test_dir / 'test1.jpg')
     image2.save(test_dir / 'test2.jpg')
+
+    # now get the entire request from a json file. 
+    sample_request_3 = json.loads(open('request_base64_example.json').read())
+    pred3 = lambda_handler(sample_request_3, context)
+    image3 = get_image_from_response(pred3)
+    image3.save(test_dir / "test3.jpg")

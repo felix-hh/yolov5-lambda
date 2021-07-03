@@ -18,8 +18,9 @@ SAVE_TRUE_FLAG = "TRUE"
 def lambda_handler(event, context):
     remaining_time = context.get_remaining_time_in_millis()
     context.log(f"remaining time in milliseconds: {remaining_time}\n")
+    context.log(event)
 
-    print("calling detection")
+    context.log("calling detection")
     # obtain function parameters
         
     params = dict(

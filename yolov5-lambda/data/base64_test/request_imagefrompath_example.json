@@ -1,0 +1,1 @@
+{"Source": "./data/images/zidane.jpg", "IsPath": "True", "Weights": "yolov5s", "Save": "true", "InferenceImageSize": 640, "ConfidenceThreshold": 0.25, "IouThreshold": 0.45}
