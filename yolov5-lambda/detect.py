@@ -28,6 +28,7 @@ DEFAULT_CONF_THRES = 0.25
 DEFAULT_IOU_THRES = 0.45
 DEFAULT_SAVE_CONFIG = False
 DEFAULT_SAVE_ROOT = Path("/tmp/")
+DEFAULT_IS_PATH = True
 
 def base64_to_numpy(image_b64):
     img = BytesIO(base64.b64decode(image_b64))
@@ -44,7 +45,7 @@ def numpy_to_b64(img):
 
 
 def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WEIGHTS, imgsz= DEFAULT_IMAGE_SIZE,
-            conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= True):
+            conf_thres= DEFAULT_CONF_THRES, iou_thres= DEFAULT_IOU_THRES, is_path= DEFAULT_IS_PATH):
     """
     Shape is HxW as typical in numpy images. 
     """
@@ -128,15 +129,15 @@ def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WE
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
+                    xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
+                    line = (cls, *xywh)  # label format
                     if save_txt:  # Write to file
-                        xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                        line = (cls, *xywh)  # label format
                         with open(txt_path, 'a') as f:
                             f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
-                    if save:  # Add bbox to image
-                        label = '%s %.2f' % (names[int(cls)], conf)
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
+                    # Add bbox to image
+                    label = '%s %.2f' % (names[int(cls)], conf)
+                    plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
             # Print time (inference + NMS)
             print('%sDone. (%.3fs)' % (s, t2 - t1))
@@ -158,7 +159,7 @@ def detect(save=DEFAULT_SAVE_CONFIG, source= DEFAULT_SOURCE, weights= DEFAULT_WE
     result = {'predictions': pred[0].tolist(),
               'image': response_img}
 
-    return json.dumps(result)
+    return result
 
 
 if __name__ == '__main__':

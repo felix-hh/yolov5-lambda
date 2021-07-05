@@ -1,5 +1,6 @@
 import json
 import sys
+import time
 from detect import detect
 # run requried imports, set up everything. 
 print('Loading lambda function') 
@@ -16,13 +17,14 @@ SAVE_TRUE_FLAG = "TRUE"
 
 # main function executed by lambda. it is passed a json event with keys and a context, that is unused. 
 def lambda_handler(event, context):
-    remaining_time = context.get_remaining_time_in_millis()
-    context.log(f"remaining time in milliseconds: {remaining_time}\n")
-    context.log(event)
+    context.log('Request received \n')
+    # dont log the image in the cloud, it is expensive. TODO log the image only in case of errors. 
+    # context.log(event)
 
-    context.log("calling detection")
+    if 'isPing' in event:
+        return f'Lambda pinged at {time.time()}'
+
     # obtain function parameters
-        
     params = dict(
         source= event['Source'],
         is_path= event['IsPath'].upper() == IS_PATH_TRUE_FLAG,
@@ -33,13 +35,11 @@ def lambda_handler(event, context):
         iou_thres= float(event['IouThreshold'])
     )
 
+    context.log("calling detection")
     pred = detect(**params)
     payload_size = sys.getsizeof(pred)
     context.log(f"Size of response payload: {payload_size}\n")
 
-    remaining_time = context.get_remaining_time_in_millis()
-    context.log(f"remaining time in milliseconds: {remaining_time}\n")
-
-    return pred  # Echo back the first key value
+    return pred
     #raise Exception('Something went wrong')
 

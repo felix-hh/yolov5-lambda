@@ -10,6 +10,7 @@ class Context():
     def __init__(self):
         return
     def log(self, message):
+        #don't log full images to this console. 
         print(str(message)[:100])
         return
     def get_remaining_time_in_millis(self):
@@ -36,7 +37,7 @@ sample_request_2['Source'] = image_b64
 sample_request_2['IsPath'] = 'False'
 
 def get_image_from_response(response):
-    return Image.open(BytesIO(base64.b64decode(json.loads(response)['image'])))
+    return Image.open(BytesIO(base64.b64decode(response['image'])))
 
 # doesn't run in lambda, just useful for debugging. 
 if __name__ == '__main__':
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     print('running second test')
     pred2 = lambda_handler(sample_request_2, context)
     print('finishing main')
-    print('saving test resutls')
+    print('saving test results')
     test_dir = Path('./runs/testing')
     test_dir.mkdir(exist_ok=True)
     image1 = get_image_from_response(pred1)
@@ -60,3 +61,6 @@ if __name__ == '__main__':
     pred3 = lambda_handler(sample_request_3, context)
     image3 = get_image_from_response(pred3)
     image3.save(test_dir / "test3.jpg")
+
+    # and test pinging works
+    lambda_handler({'isPing': 'True'}, context)
