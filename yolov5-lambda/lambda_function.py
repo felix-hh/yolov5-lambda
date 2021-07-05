@@ -22,6 +22,9 @@ def lambda_handler(event, context):
     # context.log(event)
 
     if 'isPing' in event:
+        sample_request_3 = json.loads(open('request_base64_example.json').read())
+        # there's no need to do recursion to call detect.py but I'm lazy enough to recycle the test
+        pred3 = lambda_handler(sample_request_3, context)
         return f'Lambda pinged at {time.time()}'
 
     # obtain function parameters
