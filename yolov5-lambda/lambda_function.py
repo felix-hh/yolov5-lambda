@@ -21,9 +21,11 @@ def lambda_handler(event, context):
     # dont log the image in the cloud, it is expensive. TODO log the image only in case of errors. 
     # context.log(event)
 
+    # if IsPing it means the request is comming from a CloudWatch scheduled event to keep our Lambda instance warm and fast
     if 'isPing' in event:
         sample_request_3 = json.loads(open('request_base64_example.json').read())
-        # there's no need to do recursion to call detect.py but I'm lazy enough to recycle the test
+        sample_request_3['Save'] = 'False' # ensure we don't save images every time we ping!
+        # there's no need to do recursion to ping detect.py but I'm lazy enough to recycle the test
         pred3 = lambda_handler(sample_request_3, context)
         return f'Lambda pinged at {time.time()}'
 
