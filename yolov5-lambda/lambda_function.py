@@ -28,7 +28,9 @@ def lambda_handler(event, context):
         sample_request_3 = json.loads(open('request_base64_example.json').read())
         sample_request_3['Save'] = 'False' # ensure we don't save images every time we ping!
         # there's no need to do recursion to ping detect.py but I'm lazy enough to recycle the test
-        pred3 = lambda_handler(sample_request_3, context)
+        pred3 = lambda_handler({
+            'body': json.dumps(sample_request_3)
+        }, context)
         return f'Lambda pinged at {time.time()}'
 
     # obtain function parameters
