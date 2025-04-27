@@ -40,13 +40,18 @@ def get_image_from_response(response):
     return Image.open(BytesIO(base64.b64decode(response['image'])))
 
 # doesn't run in lambda, just useful for debugging. 
+# (may be out of date)
 if __name__ == '__main__':
     print('we are in main')
     context = Context()
     print('running first test')
-    pred1 = lambda_handler(sample_request, context)
+    pred1 = lambda_handler(
+        {'body': json.dumps(sample_request)}, 
+        context)
     print('running second test')
-    pred2 = lambda_handler(sample_request_2, context)
+    pred2 = lambda_handler(
+        {'body': json.dumps(sample_request_2)}, 
+        context)
     print('finishing main')
     print('saving test results')
     test_dir = Path('./runs/testing')
@@ -59,10 +64,12 @@ if __name__ == '__main__':
     # now get the entire request from a json file. 
     sample_request_3 = json.loads(open('request_base64_example.json').read())
     pred3 = lambda_handler(
-        {'Body': json.dumps(sample_request_3)}, 
+        {'body': json.dumps(sample_request_3)}, 
         context)
     image3 = get_image_from_response(pred3)
     image3.save(test_dir / "test3.jpg")
 
     # and test pinging works
-    lambda_handler({'isPing': 'True'}, context)
+    lambda_handler(
+        {'body': json.dumps({'isPing': 'True'})}, 
+        context)

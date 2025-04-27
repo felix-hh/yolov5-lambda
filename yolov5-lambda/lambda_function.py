@@ -19,7 +19,7 @@ SAVE_TRUE_FLAG = "TRUE"
 def lambda_handler(event, context):
     context.log('Request received \n')
     context.log(event)
-    event = json.loads(event['Body'])
+    event = json.loads(event['body'])
     # dont log the image in the cloud, it is expensive. TODO log the image only in case of errors. 
     # context.log(event)
 
