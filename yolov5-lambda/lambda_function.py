@@ -18,6 +18,7 @@ SAVE_TRUE_FLAG = "TRUE"
 # main function executed by lambda. it is passed a json event with keys and a context, that is unused. 
 def lambda_handler(event, context):
     context.log('Request received \n')
+    context.log(event)
     event = json.loads(event['Body'])
     # dont log the image in the cloud, it is expensive. TODO log the image only in case of errors. 
     # context.log(event)
