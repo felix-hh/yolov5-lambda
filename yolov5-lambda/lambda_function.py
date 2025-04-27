@@ -19,12 +19,12 @@ SAVE_TRUE_FLAG = "TRUE"
 def lambda_handler(event, context):
     context.log('Request received \n')
     context.log(event)
-    event = json.loads(event['body'])
+    body = json.loads(event['body'])
     # dont log the image in the cloud, it is expensive. TODO log the image only in case of errors. 
-    # context.log(event)
+    # context.log(body)
 
     # if IsPing it means the request is comming from a CloudWatch scheduled event to keep our Lambda instance warm and fast
-    if 'isPing' in event:
+    if 'isPing' in body:
         sample_request_3 = json.loads(open('request_base64_example.json').read())
         sample_request_3['Save'] = 'False' # ensure we don't save images every time we ping!
         # there's no need to do recursion to ping detect.py but I'm lazy enough to recycle the test
@@ -33,13 +33,13 @@ def lambda_handler(event, context):
 
     # obtain function parameters
     params = dict(
-        source= event['Source'],
-        is_path= event['IsPath'].upper() == IS_PATH_TRUE_FLAG,
-        weights= WEIGHTS_TO_PATHS[event['Weights']], 
-        save= event['Save'].upper() == SAVE_TRUE_FLAG,
-        imgsz= int(event['InferenceImageSize']),
-        conf_thres= float(event['ConfidenceThreshold']),
-        iou_thres= float(event['IouThreshold'])
+        source= body['Source'],
+        is_path= body['IsPath'].upper() == IS_PATH_TRUE_FLAG,
+        weights= WEIGHTS_TO_PATHS[body['Weights']], 
+        save= body['Save'].upper() == SAVE_TRUE_FLAG,
+        imgsz= int(body['InferenceImageSize']),
+        conf_thres= float(body['ConfidenceThreshold']),
+        iou_thres= float(body['IouThreshold'])
     )
 
     context.log("calling detection")
