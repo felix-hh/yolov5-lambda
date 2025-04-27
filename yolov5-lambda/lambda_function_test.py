@@ -59,7 +59,7 @@ if __name__ == '__main__':
     # now get the entire request from a json file. 
     sample_request_3 = json.loads(open('request_base64_example.json').read())
     pred3 = lambda_handler(
-        {'body': json.dumps(sample_request_3)}, 
+        {'Body': json.dumps(sample_request_3)}, 
         context)
     image3 = get_image_from_response(pred3)
     image3.save(test_dir / "test3.jpg")
