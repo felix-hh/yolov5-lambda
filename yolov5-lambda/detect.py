@@ -33,7 +33,7 @@ DEFAULT_IS_PATH = True
 def base64_to_numpy(image_b64):
     img = BytesIO(base64.b64decode(image_b64))
     img = Image.open(img)
-    img = np.asarray(img) #todo ensure that images are always converted to np.uint8
+    img = np.array(img) #todo ensure that images are always converted to np.uint8
     return img
 
 def numpy_to_b64(img): 
